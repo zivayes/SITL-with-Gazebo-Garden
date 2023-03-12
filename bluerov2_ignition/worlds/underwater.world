@@ -1,0 +1,250 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="underwater">
+
+    
+    
+    <model name="water">
+      <static>true</static>
+      <pose>0 0 1.02 3.1415 0 3.1415</pose>
+      <link name="link">
+        <visual name="visual">
+          <transparency>0.6</transparency>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>260 510 2.55</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.9 1</ambient>
+            <diffuse>0.2 0.2 0.9 1</diffuse>
+            <specular>0.1 0.1 0.3 1</specular>
+            <emissive>0 0 0 1</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pool">
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
+      <link name="ground">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://pool/pool.dae</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+              <mesh>
+                <uri>model://pool/pool.dae</uri>
+                <scale>1 1 1</scale>
+              </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+     <model name="yuvarlak">
+      <pose>0 0 0.3 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+      <inertial>
+        <mass>1.0</mass>
+        <inertia> <!-- inertias are tricky to compute -->
+          <!-- http://gazebosim.org/tutorials?tut=inertia&cat=build_robot -->
+          <ixx>0.083</ixx>       <!-- for a cylinder: ixx = 0.083 * mass * (y*y + z*z) -->
+          <ixy>0.0</ixy>         <!-- for a cylinder: ixy = 0 -->
+          <ixz>0.0</ixz>         <!-- for a cylinder: ixz = 0 -->
+          <iyy>0.083</iyy>       <!-- for a cylinder: iyy = 0.083 * mass * (x*x + z*z) -->
+          <iyz>0.0</iyz>         <!-- for a cylinder: iyz = 0 -->
+          <izz>0.083</izz>       <!-- for a cylinder: izz = 0.083 * mass * (x*x + y*y) -->
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+   <cylinder length="0.01" radius="0.01"/>
+   </geometry>
+   <material>
+          <emissive>0 0 1 0</emissive>
+        </material>
+   </visual>
+   </link>
+   </model>
+   
+   
+   <model name="yuvarlak1">
+      <pose>0 0 0.4 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+      <inertial>
+        <mass>1.0</mass>
+        <inertia> <!-- inertias are tricky to compute -->
+          <!-- http://gazebosim.org/tutorials?tut=inertia&cat=build_robot -->
+          <ixx>0.083</ixx>       <!-- for a cylinder: ixx = 0.083 * mass * (y*y + z*z) -->
+          <ixy>0.0</ixy>         <!-- for a cylinder: ixy = 0 -->
+          <ixz>0.0</ixz>         <!-- for a cylinder: ixz = 0 -->
+          <iyy>0.083</iyy>       <!-- for a cylinder: iyy = 0.083 * mass * (x*x + z*z) -->
+          <iyz>0.0</iyz>         <!-- for a cylinder: iyz = 0 -->
+          <izz>0.083</izz>       <!-- for a cylinder: izz = 0.083 * mass * (x*x + y*y) -->
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+   <cylinder length="0.01" radius="0.01"/>
+   </geometry>
+   <material>
+          <emissive>0 1 0 1</emissive>
+        </material>
+   </visual>
+   </link>
+   </model>
+   
+    <model name="yuvarlak2">
+      <pose>0 0 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+      <inertial>
+        <mass>1.0</mass>
+        <inertia> <!-- inertias are tricky to compute -->
+          <!-- http://gazebosim.org/tutorials?tut=inertia&cat=build_robot -->
+          <ixx>0.083</ixx>       <!-- for a cylinder: ixx = 0.083 * mass * (y*y + z*z) -->
+          <ixy>0.0</ixy>         <!-- for a cylinder: ixy = 0 -->
+          <ixz>0.0</ixz>         <!-- for a cylinder: ixz = 0 -->
+          <iyy>0.083</iyy>       <!-- for a cylinder: iyy = 0.083 * mass * (x*x + z*z) -->
+          <iyz>0.0</iyz>         <!-- for a cylinder: iyz = 0 -->
+          <izz>0.083</izz>       <!-- for a cylinder: izz = 0.083 * mass * (x*x + y*y) -->
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+   <cylinder length="0.01" radius="0.01"/>
+   </geometry>
+   <material>
+          <emissive>1 0 0 1</emissive>
+        </material>
+   </visual>
+   </link>
+   </model>
+   
+
+    
+        
+    <plugin
+        filename="gz-sim-user-commands-system"
+        name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+        filename="gz-sim-scene-broadcaster-system"
+        name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
+     <plugin
+        filename="gz-sim-physics-system"
+        name="gz::sim::systems::Physics">
+    </plugin>
+    <!-- IMU plugin manages all IMU sensors -->
+    <plugin filename="libgz-sim-imu-system.so"
+            name="gz::sim::systems::Imu">
+    </plugin>
+
+    <!-- Buoyancy plugin manages buoyancy for all models -->
+    <plugin
+        filename="gz-sim-buoyancy-system"
+        name="gz::sim::systems::Buoyancy">
+      <!-- Fluid density is 1 (air) above 0 and 1000 (water) below 0 -->
+      <graded_buoyancy>
+        <default_density>1000</default_density>
+        <density_change>
+          <above_depth>0</above_depth>
+          <density>1</density>
+        </density_change>
+      </graded_buoyancy>
+      <!-- Enable by model name -->
+      <enable>bluerov2</enable>
+    </plugin>
+
+<model name="camera">
+      <pose>4 0 1.0 0 0.0 3.14</pose>
+      <link name="link">
+        <pose>0.05 0.05 0.05 0 0 0</pose>
+        <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.000166667</ixx>
+            <iyy>0.000166667</iyy>
+            <izz>0.000166667</izz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name="camera" type="camera">
+          <camera>
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+              <width>320</width>
+              <height>240</height>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <always_on>1</always_on>
+          <update_rate>30</update_rate>
+          <visualize>true</visualize>
+          <topic>camera</topic>
+        </sensor>
+      </link>
+    </model>
+
+ 
+      <plugin filename="libgz-sim-imagedisplay-system.so" name="gz::sim::systems::Image Display">
+        <gz-gui>
+          <property key="state" type="string">docked</property>
+        </gz-gui>
+        <topic>camera</topic>
+      <!-- Enable by model name -->
+      <enable>camera</enable>
+      </plugin>
+
+ 
+
+
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
+    </include>
+
+    <include>
+      <uri>model://sand_heightmap</uri>
+      <pose>0 7 -10 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://bluerov2</uri>
+      <pose>0 0 -2 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://axes</uri>
+      <pose>0 0 0.2 0 0 0</pose>
+    </include>
+   
+       </world>
+</sdf>
