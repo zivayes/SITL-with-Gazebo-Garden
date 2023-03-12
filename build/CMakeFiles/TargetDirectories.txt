@@ -1,0 +1,4 @@
+/home/kedy2/ardupilot_gazebo/build/CMakeFiles/ArduPilotPlugin.dir
+/home/kedy2/ardupilot_gazebo/build/CMakeFiles/ParachutePlugin.dir
+/home/kedy2/ardupilot_gazebo/build/CMakeFiles/edit_cache.dir
+/home/kedy2/ardupilot_gazebo/build/CMakeFiles/rebuild_cache.dir
