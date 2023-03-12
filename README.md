@@ -1,215 +1,179 @@
-# ArduPilot Gazebo Plugin
+# Gazebo Sim : A Robotic Simulator
 
-[![ubuntu-build](https://github.com/ArduPilot/ardupilot_gazebo/actions/workflows/ubuntu-build.yml/badge.svg)](https://github.com/ArduPilot/ardupilot_gazebo/actions/workflows/ubuntu-build.yml)
-[![ccplint](https://github.com/ArduPilot/ardupilot_gazebo/actions/workflows/ccplint.yml/badge.svg)](https://github.com/ArduPilot/ardupilot_gazebo/actions/workflows/ccplint.yml)
-[![cppcheck](https://github.com/ArduPilot/ardupilot_gazebo/actions/workflows/ccpcheck.yml/badge.svg)](https://github.com/ArduPilot/ardupilot_gazebo/actions/workflows/ccpcheck.yml)
+**Maintainer:** michael AT openrobotics DOT org
 
-This is the official ArduPilot plugin for [Gazebo Sim](https://gazebosim.org/home).
-It replaces the previous
-[`ardupilot_gazebo`](https://github.com/khancyr/ardupilot_gazebo)
-plugin and provides support for the latest release of the Gazebo simulator
-[(Gazebo Garden)](https://gazebosim.org/docs/garden/install).
+[![GitHub open issues](https://img.shields.io/github/issues-raw/gazebosim/gz-sim.svg)](https://github.com/gazebosim/gz-sim/issues)
+[![GitHub open pull requests](https://img.shields.io/github/issues-pr-raw/gazebosim/gz-sim.svg)](https://github.com/gazebosim/gz-sim/pulls)
+[![Discourse topics](https://img.shields.io/discourse/https/community.gazebosim.org/topics.svg)](https://community.gazebosim.org)
+[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-It also adds the following features:
+Build | Status
+-- | --
+Test coverage | [![codecov](https://codecov.io/gh/gazebosim/gz-sim/branch/main/graph/badge.svg)](https://codecov.io/gh/gazebosim/gz-sim/branch/main)
+Ubuntu Focal | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ignition_gazebo-ci-main-focal-amd64)](https://build.osrfoundation.org/job/ignition_gazebo-ci-main-focal-amd64)
+Homebrew      | [![Build Status](https://build.osrfoundation.org/buildStatus/icon?job=ignition_gazebo-ci-main-homebrew-amd64)](https://build.osrfoundation.org/job/ignition_gazebo-ci-main-homebrew-amd64)
+Windows       | [![Build Status](https://build.osrfoundation.org/job/ign_gazebo-ci-win/badge/icon)](https://build.osrfoundation.org/job/ign_gazebo-ci-win/)
 
-- More flexible data exchange between SITL and Gazebo using JSON.
-- Additional sensors supported.
-- True simulation lockstepping. It is now possible to use GDB to stop
-  the Gazebo time for debugging.
-- Improved 3D rendering using the `ogre2` rendering engine.
+Gazebo Sim is an open source robotics simulator. Through Gazebo Sim, users have access to high fidelity physics, rendering, and sensor models. Additionally, users and developers have multiple points of entry to simulation including a graphical user interface, plugins, and asynchronous message passing and services.
 
-The project comprises a Gazebo Sim plugin to connect to ArduPilot SITL
-(Software In The Loop) and some example models and worlds.
+Gazebo Sim is derived from [Gazebo Classic](http://classic.gazebosim.org) and represents over 16 years of development and experience in robotics and simulation. This library is part of the [Gazebo](https://gazebosim.org) project.
 
-## Prerequisites
+# Table of Contents
 
-Gazebo Sim Garden is supported on Ubuntu 20.04 (Focal) and 22.04 (Jammy).
-If you are running Ubuntu as a virtual machine you will need at least
-Ubuntu 20.04 in order to have the OpenGL support required for the
-`ogre2` render engine. Gazebo Sim and ArduPilot SITL will also run on macOS
-(Big Sur and Monterey; Intel and M1 devices).
+[Features](#features)
 
-Follow the instructions for a
-[binary install of Gazebo Garden](https://gazebosim.org/docs/garden/install)
-and verify that Gazebo is running correctly.
+[Install](#install)
 
-Set up an [ArduPilot development environment](https://ardupilot.org/dev/index.html).
-In the following it is assumed that you are able to run ArduPilot SITL using
-the [MAVProxy GCS](https://ardupilot.org/mavproxy/index.html).
+[Usage](#usage)
 
-## Installation
+[Documentation](#documentation)
 
-Install additional dependencies:
+[Testing](#testing)
 
-### Ubuntu
+[Folder Structure](#folder-structure)
 
-```bash
-sudo apt update
-sudo apt install libgz-sim7-dev rapidjson-dev
+[Code of Conduct](#code-of-conduct)
+
+[Contributing](#contributing)
+
+[Versioning](#versioning)
+
+[License](#license)
+
+# Features
+
+* **Dynamics simulation**: Access multiple high-performance physics engines
+through
+[Gazebo Physics](https://github.com/gazebosim/gz-physics).
+
+* **Advanced 3D graphics**: Through
+[Gazebo Rendering](https://github.com/gazebosim/gz-rendering),
+it's possible to use rendering engines such as OGRE v2 for realistic rendering
+of environments with high-quality lighting, shadows, and textures.
+
+* **Sensors and noise models**: Generate sensor data, optionally with noise,
+from laser range finders, 2D/3D cameras, Kinect style sensors, contact sensors,
+force-torque, IMU, GPS, and more, all powered by
+[Gazebo Sensors](https://github.com/gazebosim/gz-sensors)
+
+* **Plugins**: Develop custom plugins for robot, sensor, and
+environment control.
+
+* **Graphical interface**: Create, introspect and interact with your simulations
+through plugin-based graphical interfaces powered by
+[Gazebo GUI](https://github.com/gazebosim/gz-gui).
+
+* **Simulation models**: Access numerous robots including PR2, Pioneer2 DX,
+iRobot Create, and TurtleBot, and construct environments using other physically
+accurate models available through
+[Gazebo Fuel](https://app.gazebosim.org/fuel). You can also build a
+new model using [SDF](http://sdformat.org).
+
+* **TCP/IP Transport**: Run simulation on remote servers and interface to
+Gazebo Sim through socket-based message passing using
+[Gazebo Transport](https://github.com/gazebosim/gz-transport).
+
+* **Command line tools**: Extensive command line tools for increased simulation
+introspection and control.
+
+# Install
+
+See the [installation tutorial](https://gazebosim.org/api/gazebo/6.1/install.html).
+
+# Usage
+
+Gazebo Sim can be run from the command line, once [installed](#install), using:
+
+```
+gz sim
 ```
 
-### macOS
+For help, and command line options use:
 
-```bash
-brew update
-brew install rapidjson
+```
+gz sim -h
 ```
 
-Clone the repo and build:
+## Known issue of command line tools
 
-```bash
-git clone https://github.com/ArduPilot/ardupilot_gazebo
-cd ardupilot_gazebo
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
-make -j4
+In the event that the installation is a mix of Debian and from source, command
+line tools from `gz-tools` may not work correctly.
+
+A workaround for a single package is to define the environment variable
+`GZ_CONFIG_PATH` to point to the location of the Gazebo library installation,
+where the YAML file for the package is found, such as
+```
+export GZ_CONFIG_PATH=/usr/local/share/gz
 ```
 
-## Configure
+However, that environment variable only takes a single path, which means if the
+installations from source are in different locations, only one can be specified.
 
-Set the Gazebo environment variables in your `.bashrc` or `.zshrc` or in 
-the terminal used to run Gazebo.
-
-#### Terminal
-
-Assuming that you have cloned the repository to `$HOME/ardupilot_gazebo`:
-
-```bash
-export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ardupilot_gazebo/build:$GZ_SIM_SYSTEM_PLUGIN_PATH
-export GZ_SIM_RESOURCE_PATH=$HOME/ardupilot_gazebo/models:$HOME/ardupilot_gazebo/worlds:$GZ_SIM_RESOURCE_PATH
+Another workaround for working with multiple Gazebo libraries on the command
+line is using symbolic links to each library's YAML file.
+```
+mkdir ~/.gz/tools/configs -p
+cd ~/.gz/tools/configs/
+ln -s /usr/local/share/gz/fuel8.yaml .
+ln -s /usr/local/share/gz/transport12.yaml .
+ln -s /usr/local/share/gz/transportlog12.yaml .
+...
+export GZ_CONFIG_PATH=$HOME/.gz/tools/configs
 ```
 
-#### .bashrc or .zshrc
+This issue is tracked [here](https://github.com/gazebosim/gz-tools/issues/8).
 
-Assuming that you have cloned the repository to `$HOME/ardupilot_gazebo`:
+# Documentation
 
-```bash
-echo 'export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ardupilot_gazebo/build:${GZ_SIM_SYSTEM_PLUGIN_PATH}' >> ~/.bashrc
-echo 'export GZ_SIM_RESOURCE_PATH=$HOME/ardupilot_gazebo/models:$HOME/ardupilot_gazebo/worlds:${GZ_SIM_RESOURCE_PATH}' >> ~/.bashrc
+See the [installation tutorial](https://gazebosim.org/api/gazebo/6.1/install.html).
+
+# Testing
+
+See the [installation tutorial](https://gazebosim.org/api/gazebo/6.1/install.html).
+
+See the [Writing Tests section of the contributor guide](https://github.com/gazebosim/gz-sim/blob/main/CONTRIBUTING.md#writing-tests) for help creating or modifying tests.
+
+# Folder Structure
+
+Refer to the following table for information about important directories and files in this repository.
+
+```
+gz-sim
+├── examples                     Various examples that can be run against binary or source installs of gz-sim.
+│   ├── plugin                   Example plugins.
+│   ├── standalone               Example standalone programs that use gz-sim as a library.
+│   └── worlds                   Example SDF world files.
+├── include/gz/sim               Header files that downstream users are expected to use.
+│   └── detail                   Header files that are not intended for downstream use, mainly template implementations.
+├── src                          Source files and unit tests.
+│   ├── gui                      Graphical interface source code.
+│   └── systems                  System source code.
+├── test
+│   ├── integration              Integration tests.
+│   ├── performance              Performance tests.
+│   ├── plugins                  Plugins used in tests.
+│   ├── regression               Regression tests.
+│   └── tutorials                Tutorials, written in markdown.
+├── Changelog.md                 Changelog.
+├── CMakeLists.txt               CMake build script.
+├── Migration.md                 Migration guide.
+└── README.md                    This readme.
 ```
 
-Reload your terminal with `source ~/.bashrc` (or `source ~/.zshrc` on macOS).
+# Contributing
 
-## Usage
+Please see
+[CONTRIBUTING.md](https://github.com/gazebosim/gz-sim/blob/main/CONTRIBUTING.md).
 
-### 1. Iris quad-copter
+# Code of Conduct
 
-#### Run Gazebo
+Please see
+[CODE_OF_CONDUCT.md](https://github.com/gazebosim/gz-sim/blob/main/CODE_OF_CONDUCT.md).
 
-```bash
-gz sim -v4 -r iris_runway.sdf
-```
+# Versioning
 
-The `-v4` parameter is not mandatory, it shows additional information and is
-useful for troubleshooting.
+This library uses [Semantic Versioning](https://semver.org/). Additionally, this library is part of the [Gazebo project](https://gazebosim.org) which periodically releases a versioned set of compatible and complimentary libraries. See the [Gazebo website](https://gazebosim.org) for version and release information.
 
-#### Run ArduPilot SITL
+# License
 
-To run an ArduPilot simulation with Gazebo, the frame should have `gazebo-`
-in it and have `JSON` as model. Other commandline parameters are the same
-as usual on SITL.
-
-```bash
-sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --map --console
-```
-
-#### Arm and takeoff
-
-```bash
-STABILIZE> mode guided
-GUIDED> arm throttle
-GUIDED> takeoff 5
-```
-
-### 2. Zephyr delta wing  
-
-The Zephyr delta wing is positioned on the runway for vertical take-off. 
-
-#### Run Gazebo
-
-```bash
-gz sim -v4 -r zephyr_runway.sdf
-```
-
-#### Run ArduPilot SITL
-
-```bash
-sim_vehicle.py -v ArduPlane -f gazebo-zephyr --model JSON --map --console
-```
-
-#### Arm, takeoff and circle
-
-```bash
-MANUAL> mode fbwa
-FBWA> arm throttle
-FBWA> rc 3 1800
-FBWA> mode circle
-```
-
-#### Increase the simulation speed
-
-The `zephyr_runway.sdf` world has a `<physics>` element configured to run
-faster than real time: 
-
-```xml
-<physics name="1ms" type="ignore">
-  <max_step_size>0.001</max_step_size>
-  <real_time_factor>-1.0</real_time_factor>
-</physics>
-```
-
-To see the effect of the speed-up set the param `SIM_SPEEDUP` to a value
-greater than one:
-
-```bash
-MANUAL> param set SIM_SPEEDUP 10
-```
-
-## Models
-
-In addition to the Iris and Zephyr models included here, a selection
-of models configured use the ArduPilot Gazebo plugin is available in
-[ArduPilot/SITL_Models](https://github.com/ArduPilot/SITL_Models). 
-Click on the images to see further details.
-
-<table>
-<tr>
-<td title="Alti Transition">
-<a href="https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/AltiTransition.md">
-<img src="https://user-images.githubusercontent.com/24916364/150612555-958a64d4-c434-4f90-94bd-678e6b6011ec.png" width="100%" style="display: block;">
-</a>
-</td>
-<td title="SkyCat TVBS">
-<a href="https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/SkyCatTVBS.md">
-<img src="https://user-images.githubusercontent.com/24916364/145025150-4e7e48e1-3e83-4c83-be7b-b944db1d9152.png" width="100%" style="display: block;">
-</a>
-</td>
-<td title="Skywalker X8">
-<a href="https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/SkywalkerX8.md">
-<img src="https://user-images.githubusercontent.com/24916364/142733947-1a39e963-0aea-4b1b-a57b-85455b2278fe.png" width="100%" style="display: block;">
-</a>
-</td>
-</tr>
-<tr>
-<td title="Quadruped">
-<a href="https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/Quadruped.md">
-<img src="https://user-images.githubusercontent.com/24916364/144449710-5bab34b4-dabf-410f-b276-d290ddbb54b2.gif" width="100%" style="display: block;">
-</a>
-</td>
-<td title="WildThumper">
-<a href="https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/WildThumper.md">
-<img src="https://user-images.githubusercontent.com/24916364/144286154-231ac9b3-e54b-489f-b35e-bc2adb4b1aa0.png" width="100%" style="display: block;">
-</a>
-</td>
-<td title="Rover Playpen">
-<a href="https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/RoverPlayPen.md">
-<img src="https://user-images.githubusercontent.com/24916364/144513412-1b0661f1-fdf8-4aed-a745-e8bb73ffca91.jpg" width="100%" style="display: block;">
-</a>
-</td>
-</tr>
-</table>
-
-## Troubleshooting
-
-For issues concerning installing and running Gazebo on your platform please
-consult the Gazebo Sim documentation for [troubleshooting frequent issues](https://gazebosim.org/docs/garden/troubleshooting#ubuntu).
+This library is licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0). See also the [LICENSE](https://github.com/gazebosim/gz-sim/blob/main/LICENSE) file.
